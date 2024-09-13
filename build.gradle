@@ -1,4 +1,5 @@
 plugins {
+	id 'application'
 	id 'java'
 	id 'org.springframework.boot' version '3.3.3'
 	id 'io.spring.dependency-management' version '1.1.6'
@@ -7,6 +8,10 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
+application {
+	// Укажите главный класс с методом main
+	mainClass = 'com.example.demo.MyAuthApplication'
+}
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
@@ -41,6 +46,10 @@ dependencies {
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
 // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
 	implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.2.22'
+	implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.3.3'
+
 
 }
 
