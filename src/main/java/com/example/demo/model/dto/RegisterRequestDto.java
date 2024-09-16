@@ -1,9 +1,12 @@
 package com.example.demo.model.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 //Регистрация пользователя
-@Data
+@Getter
+@Setter
 public class RegisterRequestDto {
     private String fullName;
     private String email;
