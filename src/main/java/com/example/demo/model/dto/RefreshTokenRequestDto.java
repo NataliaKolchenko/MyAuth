@@ -1,8 +1,12 @@
 package com.example.demo.model.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 //“Сброс” токена
-@Data
+@Getter
+@Setter
 public class RefreshTokenRequestDto {
     private String refreshToken;
 }
