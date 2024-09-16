@@ -23,14 +23,24 @@ public class AuthService {
     private final JwtSecurityService jwtSecurityService;
     private final AuthenticationManager authenticationManager;
 
-    public AppUser register (RegisterRequestDto registerRequestDto){
+    public RegisterResponseDto register (RegisterRequestDto registerRequestDto){
         AppUser appUser = new AppUser();
         appUser.setEmail(registerRequestDto.getEmail());
         appUser.setFullName(registerRequestDto.getFullName());
         appUser.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
         appUser.setRole(AppRole.USER);
+        appUserRepository.save(appUser);
 
-        return appUserRepository.save(appUser);
+        String token = jwtSecurityService.generateToken(appUser);
+        String refreshToken = jwtSecurityService.generateRefreshToken(new HashMap<>(), appUser);
+
+        return RegisterResponseDto
+                .builder()
+                .email(registerRequestDto.getEmail())
+                .fullName(registerRequestDto.getFullName())
+                .jwtToken(token)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto){
