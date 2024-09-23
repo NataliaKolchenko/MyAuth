@@ -9,22 +9,29 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-@RequiredArgsConstructor
 public class AppUserService {
-
     @Autowired
-    private AppUserRepository appUserRepository;
+    private  AppUserRepository appUserRepository;
 
-    public UserDetailsService getDetailsService(){
+    public UserDetailsService getDetailsService() {
         UserDetailsService detailsService = new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
                 AppUser user = appUserRepository.findByEmail(username)
-                        .orElseThrow(()-> new UsernameNotFoundException("Пользователь не найден"));
+                        .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
                 return user;
             }
         };
         return detailsService;
     }
+
+    public AppUser getUserInfo(UserDetails userDetails){
+        AppUser user = appUserRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        return user;
+    }
+
 }
