@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 public class JwtSecurityService {
-    private static final String SECRET_KEY = "6yU3AaLTrj/YSKQtYF6yU3/YSKAaLTIv9aRtGxOcU39h7T/aRtGxO+syA=";
+    private static final String SECRET_KEY = "5Hdo5+PxMJkLQ9Wo7WnYMR/gBzTfC5XrB3iNPvMlscY=";
     private final AppUserService appUserService;
 
     private SecretKey getSigningKey() {
