@@ -1,14 +1,22 @@
 package com.example.demo.service.jwt;
 
+import com.example.demo.model.AppUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -21,14 +29,53 @@ public class JwtSecurityService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(UserDetails userDetails){
+
+//    public String generateToken(UserDetails userDetails){
+//        return Jwts.builder()
+//                .subject(userDetails.getUsername())
+//                .issuedAt(new Date(System.currentTimeMillis()))
+//                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+//                .signWith(getSigningKey())
+//                .compact();
+//    }
+
+    //  собирает claims
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof AppUser customUserDetails) {
+//            claims.put("id", customUserDetails.getId());
+            claims.put("role", customUserDetails.getRole());
+        }
+        return generateToken(claims, userDetails.getUsername());
+    }
+
+    //генерирует токен
+    private String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(getSigningKey())
+                .setClaims(claims)  // Устанавливаем все claims
+                .setSubject(subject) // Устанавливаем subject (username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
+
+//    public String generateToken(UserDetails userDetails){
+//        String role = userDetails.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority) // Преобразуем список ролей в строку
+//                .findFirst()
+//                .orElse("USER"); // Укажите роль по умолчанию, если ее нет
+//
+//        return Jwts.builder()
+//                .setSubject(userDetails.getUsername())
+//                .claim("role", role) // Добавляем роль в токен
+//                .claim("userId", )
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // срок действия - 24 минуты
+//                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+//                .compact();
+//    }
 
     public String generateRefreshToken(Map<String, String> claims, UserDetails userDetails){
         return Jwts.builder()
