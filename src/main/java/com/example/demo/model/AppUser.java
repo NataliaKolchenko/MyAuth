@@ -22,12 +22,6 @@ public class AppUser implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-////    @Column(unique = true) // Уникальное автоинкрементное поле
-//    private int id;
-
-
-
     @NotNull
     private String password;
     private AppRole role;

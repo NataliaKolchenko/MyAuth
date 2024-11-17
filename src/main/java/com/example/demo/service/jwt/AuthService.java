@@ -4,15 +4,9 @@ import com.example.demo.enums.AppRole;
 import com.example.demo.model.AppUser;
 import com.example.demo.model.dto.*;
 import com.example.demo.repository.AppUserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -20,21 +14,14 @@ import java.util.HashMap;
 @Service
 public class AuthService {
     private final AppUserRepository appUserRepository;
-//    private final PasswordEncoder passwordEncoder;
 
     private final JwtSecurityService jwtSecurityService;
     @Autowired
-//    private final AuthenticationManager authenticationManager;
-
     public AuthService(AppUserRepository appUserRepository,
-//                       PasswordEncoder passwordEncoder,
                        JwtSecurityService jwtSecurityService
-//                       AuthenticationManager authenticationManager
     ) {
         this.appUserRepository = appUserRepository;
-//        this.passwordEncoder = passwordEncoder;
         this.jwtSecurityService = jwtSecurityService;
-//        this.authenticationManager = authenticationManager;
     }
 
     public RegisterResponseDto register (RegisterRequestDto registerRequestDto){
