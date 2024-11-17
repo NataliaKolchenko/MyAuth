@@ -9,7 +9,6 @@ import lombok.Setter;
 @Builder
 public class RegisterResponseDto {
     private String email;
-    private String fullName;
     private String jwtToken;
     private String refreshToken;
 }

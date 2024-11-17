@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import com.example.demo.enums.AppRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,10 +19,10 @@ import java.util.List;
 @Table(name="app_user")
 public class AppUser implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String fullName;
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @NotNull
     private String password;
     private AppRole role;
 

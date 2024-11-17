@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.AppUser;
 import com.example.demo.model.dto.*;
 import com.example.demo.service.jwt.AuthService;
 import lombok.RequiredArgsConstructor;

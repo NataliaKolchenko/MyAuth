@@ -1,7 +1,9 @@
 package com.example.demo.service.jwt;
 
+import com.example.demo.model.AppUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -21,14 +24,26 @@ public class JwtSecurityService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(UserDetails userDetails){
+    //  собирает claims
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof AppUser customUserDetails) {
+            claims.put("role", customUserDetails.getRole());
+        }
+        return generateToken(claims, userDetails.getUsername());
+    }
+
+    //генерирует токен
+    private String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(getSigningKey())
+                .setClaims(claims)  // Устанавливаем все claims
+                .setSubject(subject) // Устанавливаем subject (username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public String generateRefreshToken(Map<String, String> claims, UserDetails userDetails){
         return Jwts.builder()
@@ -58,22 +73,18 @@ public class JwtSecurityService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Когда срок действия заканчивается
     public Date extractExpiration (String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // Когда выдан токен
     public Date extractIssuedAt (String token){
         return extractClaim(token, Claims::getIssuedAt);
     }
 
-    // Метод проверки срока действия токена
     public boolean isTokenExpired(String token){
         return extractExpiration(token).before(new Date());
     }
 
-    // Метод для валидации токена
     public boolean validateToken (String token, UserDetails userDetails){
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())
