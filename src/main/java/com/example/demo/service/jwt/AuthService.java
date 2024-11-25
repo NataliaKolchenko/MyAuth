@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 
 @Service
 public class AuthService {
@@ -33,13 +32,11 @@ public class AuthService {
         appUserRepository.save(appUser);
 
         String token = jwtSecurityService.generateToken(appUser);
-        String refreshToken = jwtSecurityService.generateRefreshToken(new HashMap<>(), appUser);
 
         return RegisterResponseDto
                 .builder()
                 .email(registerRequestDto.getEmail())
                 .jwtToken(token)
-                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -50,33 +47,12 @@ public class AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("Ошибка"));
 
         String token = jwtSecurityService.generateToken(user);
-        String refreshToken = jwtSecurityService.generateRefreshToken(new HashMap<>(), user);
 
         return LoginResponseDto
                 .builder()
                 .email(loginRequestDto.getEmail())
                 .jwtToken(token)
-                .refreshToken(refreshToken)
                 .build();
     }
 
-    public RefreshTokenResponseDto refresh (RefreshTokenRequestDto refreshTokenRequestDto){
-        String jwt = refreshTokenRequestDto.getRefreshToken();
-        String email = jwtSecurityService.extractUsername(jwt);
-        AppUser user = appUserRepository
-                .findByEmail(email)
-                .orElseThrow();
-        if(jwtSecurityService.validateToken(jwt, user)){
-            RefreshTokenResponseDto refreshTokenResponseDto = new RefreshTokenResponseDto();
-
-            refreshTokenResponseDto
-                    .setJwtToken(jwtSecurityService.generateToken(user));
-
-            refreshTokenResponseDto
-                    .setRefreshToken(jwtSecurityService.generateRefreshToken(new HashMap<>(), user));
-
-            return refreshTokenResponseDto;
-        }
-        return null;
-    }
 }
