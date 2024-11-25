@@ -3,7 +3,6 @@ package com.example.demo.model;
 import com.example.demo.enums.AppRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;

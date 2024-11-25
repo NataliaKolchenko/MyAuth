@@ -1,5 +1,5 @@
 package com.example.demo.enums;
 
 public enum AppRole {
-    ADMIN, ROLE_USER
+    ROLE_ADMIN, ROLE_USER, ROLE_DIRECTOR
 }
