@@ -76,11 +76,6 @@ public class JwtSecurityService {
     public Date extractExpiration (String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-
-    public Date extractIssuedAt (String token){
-        return extractClaim(token, Claims::getIssuedAt);
-    }
-
     public boolean isTokenExpired(String token){
         return extractExpiration(token).before(new Date());
     }
