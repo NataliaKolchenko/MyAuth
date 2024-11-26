@@ -37,23 +37,13 @@ public class JwtSecurityService {
     private String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)  // Устанавливаем все claims
-                .setSubject(subject) // Устанавливаем subject (username)
+                .setSubject(subject) // Устанавливаем subject (email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-
-    public String generateRefreshToken(Map<String, String> claims, UserDetails userDetails){
-        return Jwts.builder()
-                .claims(claims)
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24 * 60))
-                .signWith(getSigningKey())
-                .compact();
-    }
 
     private <T> T extractClaim (String token, Function<Claims, T> claimsResolver){
         final Claims claims = extractAllClaims(token);

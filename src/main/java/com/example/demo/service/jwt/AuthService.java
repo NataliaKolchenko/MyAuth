@@ -44,7 +44,7 @@ public class AuthService {
 
         AppUser user = appUserRepository
                 .findByEmail(loginRequestDto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Ошибка"));
+                .orElseThrow(() -> new UsernameNotFoundException("Ошибка Аутентификации"));
 
         String token = jwtSecurityService.generateToken(user);
 
