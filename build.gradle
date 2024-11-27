@@ -42,13 +42,11 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.6'
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
 	compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
-	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
-// https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
 	implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.2.22'
-	implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.3.3'
+	testImplementation group: 'com.h2database', name: 'h2', version: '2.3.232'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.3'
 
 
 }

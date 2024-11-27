@@ -9,8 +9,10 @@ import com.example.demo.model.dto.RegisterResponseDto;
 import com.example.demo.repository.AppUserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -28,10 +30,11 @@ class AuthServiceTest {
     @Mock
     private JwtSecurityService jwtSecurityService;
 
+    @InjectMocks
+    private AuthService authService;
+
     @Test
     void register_Successful() {
-        AuthService authService = new AuthService(appUserRepository, jwtSecurityService);
-
         RegisterRequestDto requestDto = new RegisterRequestDto();
         requestDto.setEmail("test@example.com");
         requestDto.setPassword("password123");
@@ -65,12 +68,8 @@ class AuthServiceTest {
     }
 
 
-
-
     @Test
     void register_TokenGenerationFailure() {
-        AuthService authService = new AuthService(appUserRepository, jwtSecurityService);
-
         RegisterRequestDto requestDto = new RegisterRequestDto();
         requestDto.setEmail("test@example.com");
         requestDto.setPassword("password123");
@@ -78,7 +77,7 @@ class AuthServiceTest {
         when(jwtSecurityService.generateToken(any(AppUser.class))).thenThrow(new RuntimeException("Token generation failed"));
 
         assertAll(
-                () ->  assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RuntimeException.class, () -> {
                     authService.register(requestDto);
                 }),
                 () -> verify(appUserRepository).save(any(AppUser.class))
@@ -88,7 +87,7 @@ class AuthServiceTest {
 
     @Test
     void testLogin_Successful() {
-        AuthService authService = new AuthService(appUserRepository, jwtSecurityService);
+        String token = "jwtToken";
 
         LoginRequestDto requestDto = new LoginRequestDto();
         requestDto.setEmail("test@example.com");
@@ -96,10 +95,8 @@ class AuthServiceTest {
 
         AppUser mockUser = new AppUser();
         mockUser.setEmail(requestDto.getEmail());
-        mockUser.setPassword(requestDto.getPassword());
+        mockUser.setPassword(new BCryptPasswordEncoder().encode(requestDto.getPassword()));
         mockUser.setRole(AppRole.ROLE_USER);
-
-        String token = "jwtToken";
 
         when(appUserRepository.findByEmail(requestDto.getEmail())).thenReturn(Optional.of(mockUser));
 
@@ -119,21 +116,18 @@ class AuthServiceTest {
     }
 
     @Test
-    void testLogin_UserNotFound() {
-        AuthService authService = new AuthService(appUserRepository, jwtSecurityService);
-
+    void testLogin_UserNotFound_Exception() {
         LoginRequestDto requestDto = new LoginRequestDto();
         requestDto.setEmail("nonexistent@example.com");
         requestDto.setPassword("password123");
 
         when(appUserRepository.findByEmail(requestDto.getEmail())).thenReturn(Optional.empty());
 
+        BadCredentialsException exception = assertThrows(BadCredentialsException.class, () -> {
+            authService.login(requestDto);
+        });
         assertAll(
-                () -> assertThrows(UsernameNotFoundException.class, () -> {
-                    authService.login(requestDto);
-                }),
-
-                () -> verify(appUserRepository).findByEmail(requestDto.getEmail()),
+                () -> assertEquals("Ошибка Аутентификации", exception.getMessage()),
                 () -> verifyNoInteractions(jwtSecurityService)
         );
     }
