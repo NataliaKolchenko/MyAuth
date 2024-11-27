@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import com.example.demo.enums.AppRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +22,9 @@ public class AppUser implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotNull
     private String password;
+
+    @Enumerated(EnumType.ORDINAL)
     private AppRole role;
 
     //Этот метод возвращает коллекцию прав (ролей) пользователя. В вашем случае он возвращает список с одним элементом - ролью пользователя, преобразованной в SimpleGrantedAuthority. Это используется Spring Security для определения, к каким ресурсам пользователь имеет доступ.

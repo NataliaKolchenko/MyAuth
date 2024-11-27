@@ -5,6 +5,9 @@ import com.example.demo.model.AppUser;
 import com.example.demo.model.dto.*;
 import com.example.demo.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.password.CompromisedPasswordException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,7 +47,12 @@ public class AuthService {
 
         AppUser user = appUserRepository
                 .findByEmail(loginRequestDto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Ошибка"));
+                .orElseThrow(() -> new BadCredentialsException("Ошибка Аутентификации"));
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if(!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
+            throw new BadCredentialsException("Ошибка Аутентификации");
+        }
 
         String token = jwtSecurityService.generateToken(user);
 
