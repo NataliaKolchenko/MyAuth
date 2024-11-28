@@ -47,10 +47,10 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.3.3'
     testImplementation group: 'com.h2database', name: 'h2', version: '2.3.232'
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.3'
-    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
-// https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
     compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
+    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.4'
+
 
 
 }

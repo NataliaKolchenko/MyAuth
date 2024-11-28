@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %highlight(%logger{36}){INFO=cyan, WARN=magenta, ERROR=bright-red} - %msg%n
+            </pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logback/MyAuthService.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+<!--            log divided by days-->
+            <fileNamePattern>logback/bookStoreApp.%d{yyyy-MM-dd}.log</fileNamePattern>
+<!--            save log last N days-->
+            <maxHistory>1</maxHistory>
+<!--            total size of file-->
+            <totalSizeCap>100MB</totalSizeCap>
+<!--            max size one file-->
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>
