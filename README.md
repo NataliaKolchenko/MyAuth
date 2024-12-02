@@ -12,7 +12,8 @@ The prototype data of the server part of services of the Authorization includes 
 ![img_2.png](img_2.png)
 
 **Swagger**
-http://localhost:8080/swagger-ui/index.html
+- if the project was launched locally - http://localhost:8080/swagger-ui/index.html
+- - if project was launched in docker - http://localhost:8081/swagger-ui/index.html
 
 **Used technology stack in my web application:**
 - Java 17
