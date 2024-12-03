@@ -16,7 +16,7 @@
         <file>logback/MyAuthService.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 <!--            log divided by days-->
-            <fileNamePattern>logback/bookStoreApp.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logback/myAuthApp.%d{yyyy-MM-dd}.log</fileNamePattern>
 <!--            save log last N days-->
             <maxHistory>1</maxHistory>
 <!--            total size of file-->
