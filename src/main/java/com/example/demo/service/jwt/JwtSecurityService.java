@@ -24,7 +24,7 @@ public class JwtSecurityService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    //  собирает claims
+    // collects claims
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof AppUser customUserDetails) {
@@ -33,7 +33,7 @@ public class JwtSecurityService {
         return generateToken(claims, userDetails.getUsername());
     }
 
-    //генерирует токен
+    //generates a token
     private String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)  // Устанавливаем все claims
@@ -58,7 +58,7 @@ public class JwtSecurityService {
                 .getPayload();
     }
 
-    // Получение имени юзера (он же почта)
+    // Getting the user's name (aka mail)
     public String extractUsername (String token){
         return extractClaim(token, Claims::getSubject);
     }

@@ -27,37 +27,37 @@ public class AppUser implements UserDetails {
     @Enumerated(EnumType.ORDINAL)
     private AppRole role;
 
-    //Этот метод возвращает коллекцию прав (ролей) пользователя. В вашем случае он возвращает список с одним элементом - ролью пользователя, преобразованной в SimpleGrantedAuthority. Это используется Spring Security для определения, к каким ресурсам пользователь имеет доступ.
+    //This method returns a collection of user rights (roles). In your case, it returns a list with one element - the user role converted to SimpleGrantedAuthority. This is used by Spring Security to determine which resources the user has access to.
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    //Возвращает уникальный идентификатор пользователя. В вашей реализации в качестве имени пользователя используется email. Spring Security использует это значение для идентификации пользователя в системе.
+    //Returns a unique user ID. In your implementation, email is used as the username. Spring Security uses this value to identify the user in the system.
     @Override
     public String getUsername() {
         return email;
     }
 
-    //Показывает, не истек ли срок действия аккаунта пользователя. Возвращая true, вы указываете, что срок действия аккаунта никогда не истекает. Если бы вы хотели реализовать функционал истечения срока действия аккаунтов, вы могли бы изменить эту логику.
+    //Indicates whether the user's account has expired. By returning true, you indicate that the account will never expire. If you wanted to implement account expiration functionality, you could change this logic.
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    //Определяет, не заблокирован ли аккаунт пользователя. Возвращая true, вы указываете, что аккаунт никогда не блокируется. Это можно использовать для реализации временной блокировки пользователей, например, после нескольких неудачных попыток входа.
+    //Determines whether the user's account is not blocked. By returning true, you indicate that the account is never blocked. This can be used to implement temporary blocking of users, for example, after several unsuccessful login attempts.
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    //Показывает, не истек ли срок действия учетных данных (обычно пароля) пользователя. Возвращая true, вы указываете, что срок действия учетных данных никогда не истекает. Это может быть полезно, если вы хотите реализовать политику регулярной смены паролей.
+    //Indicates whether the user's credentials (usually password) have expired. By returning true, you indicate that the credentials will never expire. This can be useful if you want to implement a policy of regularly changing passwords.
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    //Определяет, активен ли аккаунт пользователя. Возвращая true, вы указываете, что аккаунт всегда активен. Этот метод можно использовать для реализации функционала деактивации аккаунтов, например, при удалении пользователя или при необходимости подтверждения email.
+    //Determines whether the user's account is active. By returning true, you indicate that the account is always active. This method can be used to implement account deactivation functionality, for example, when deleting a user or if email confirmation is required.
     @Override
     public boolean isEnabled() {
         return true;
